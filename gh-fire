@@ -1,10 +1,10 @@
 #!/usr/bin/env sh
 
 # Setup.
-VERSION="0.1.0"
+VERSION="0.1.1"
 
 version() {
-  printf "gh fire version %s\n" "$VERSION"
+  printf "gh-fire version %s\n" "$VERSION"
   git --version
   gh version
 }
@@ -23,7 +23,7 @@ user_email() {
 }
 
 new_branch() {
-  echo "fire-${1:-$(current_branch)}-$(current_epoch)"
+  echo "fire/${1:-$(current_branch)}-$(current_epoch)"
 }
 
 fire() {
@@ -54,7 +54,7 @@ fire() {
     done
   fi
 
-  printf "\n\nLeave building!\n"
+  printf "\n\nTO THE FIRE EXIT!!!\n"
 }
 
 display_help() {
