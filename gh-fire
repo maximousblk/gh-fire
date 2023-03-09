@@ -1,7 +1,6 @@
 #!/usr/bin/env sh
 
-# Setup.
-VERSION="0.1.1"
+VERSION="0.1.2"
 
 version() {
   printf "gh-fire version %s\n" "$VERSION"
@@ -9,7 +8,6 @@ version() {
   gh version
 }
 
-# Helpers.
 current_branch() {
   basename "$(git symbolic-ref HEAD)"
 }
@@ -23,7 +21,7 @@ user_email() {
 }
 
 new_branch() {
-  echo "fire/${1:-$(current_branch)}-$(current_epoch)"
+  echo "fire-${1:-$(current_branch)}-$(current_epoch)"
 }
 
 fire() {
@@ -32,14 +30,14 @@ fire() {
   git checkout -b "$(new_branch)"
 
   # cd to git root directory
-  cd "$(git rev-parse --show-toplevel)"
+  cd "$(git rev-parse --show-toplevel)" || exit 1
 
   git add -A
 
   if [ -z "$1" ]; then
-    message="Fire! $(current_branch)."
+    message="FIRE($(current_branch)): fire at $(current_epoch)"
   else
-    message="$*"
+    message="FIRE($(current_branch)): $*"
   fi
 
   git commit -m "$message" --no-verify
@@ -59,32 +57,21 @@ fire() {
 
 display_help() {
   cat <<-EOF
+gh-fire@$VERSION (by @maximousblk)
 
-  usage:
-    gh fire [options] [COMMAND] [args]
+usage:
+  gh fire                        Add, commit, and push to remote in case of fire
+  gh fire <message>              Execute gh-fire with <message> for commit message
 
-  commands:
-    gh fire                        Add, commit, and push to remote in case of fire
-    gh fire <message>              Execute gh-fire with <message> for commit message
-
-
-  options:
-    -V, --version                   Output current version of gh-fire
-    -h, --help                      Display this help information
-
+options:
+  -V, --version                   Output current version of gh-fire
+  -h, --help                      Display this help information
 EOF
-  exit 0
 }
 
 case $1 in
--V | --version)
-  version
-  exit 0
-  ;;
--h | --help)
-  display_help
-  exit 0
-  ;;
+  -V | --version)  version;       exit 0 ;;
+  -h | --help)     display_help;  exit 0 ;;
 esac
 
 fire "$@"
